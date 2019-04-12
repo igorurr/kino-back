@@ -20,8 +20,9 @@ from KinoApi.views import MeApiView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
-    path('api/v1/', include('KinoApi.api.v1.urls')),
+    
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
 
     path('me/', MeApiView.as_view(), name='me'),
 ]
