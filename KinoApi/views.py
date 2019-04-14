@@ -1,23 +1,53 @@
-from django.views.generic.edit import CreateView
-from django.shortcuts import render
-from django.http import JsonResponse
+from KinoApi.models import CustomUser
+from django.views.generic.base import TemplateView
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 
-from rest_framework import generics
+class ApitesterView(TemplateView):
+    template_name = "apitester.html"
 
-from . import models
-from . import serializers
+class UserCountView(APIView):
+    renderer_classes = (JSONRenderer, )
 
-import json
+    def get(self, request, pk=None):
+        user_count = CustomUser.objects.count()
+        content = {'user_count': user_count}
+        return Response(content)
 
-class MeApiView(CreateView):
-    template_name = 'me.html'
+class UserAuthView(APIView):
+    renderer_classes = (JSONRenderer, )
 
-    def get(self, request, *args, **kwargs):
-        return JsonResponse({"key": "value"})
+    def post(self, request, pk=None):
+        print(request)
+        token = Token.objects.create(user=...)
+        print(token.key)
 
-    def post(self, request, *args, **kwargs):
-        return JsonResponse({"key": "value"})
+        user_count = CustomUser.objects.count()
+        content = {'user_count': user_count}
+        return Response(content)
 
-class UserListView(generics.ListCreateAPIView):
-    queryset = models.CustomUser.objects.all()
-    serializer_class = serializers.UserSerializer
+class UserRegistarationView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, pk=None):
+        user_count = CustomUser.objects.count()
+        content = {'user_count': user_count}
+        return Response(content)
+
+class UserRestorePassView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, pk=None):
+        user_count = CustomUser.objects.count()
+        content = {'user_count': user_count}
+        return Response(content)
+
+class UserMeView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, pk=None):
+        user_count = CustomUser.objects.count()
+        content = {'usert': user_count}
+        return Response(content)

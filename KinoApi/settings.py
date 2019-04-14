@@ -42,15 +42,19 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'rest_auth.registration',
 
     'KinoApi',
 ]
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'KinoApi.serializers.UserSerializer',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
 }
 
 MIDDLEWARE = [
@@ -100,6 +104,12 @@ DATABASES = {
     }
 }
 
+CORS_ORIGIN_WHITELIST = (
+    'google.com',
+    'localhost:3000'
+)
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

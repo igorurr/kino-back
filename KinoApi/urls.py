@@ -16,13 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from KinoApi.views import MeApiView
+from KinoApi.views import ( ApitesterView, UserCountView, UserAuthView, UserRegistarationView, 
+                            UserRestorePassView, UserMeView )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('apitester', ApitesterView.as_view(), name='Apitester'),
+    
+    path('api/v1/countusers', UserCountView.as_view(), name='countusers'),
 
-    path('me/', MeApiView.as_view(), name='me'),
+    path('api/v1/user/auth',            UserAuthView.as_view(),             name='UserAuth'),
+    path('api/v1/user/registaration',   UserRegistarationView.as_view(),    name='UserRegistaration'),
+    path('api/v1/user/restore_pass',    UserRestorePassView.as_view(),      name='UserRestorePass'),
+    path('api/v1/user/me',              UserMeView.as_view(),               name='UserMe'),
 ]
