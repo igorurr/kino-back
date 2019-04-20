@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework', 
     'rest_framework.authtoken',
 
+    'corsheaders',
+
     'django.contrib.sites',
 
     'KinoApi',
@@ -65,7 +67,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
 
 ROOT_URLCONF = 'KinoApi.urls'
 
@@ -109,7 +121,7 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:3000'
 )
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
