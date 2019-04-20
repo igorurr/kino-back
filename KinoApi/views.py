@@ -1,6 +1,6 @@
 from KinoApi.models import CustomUser
 from rest_framework.parsers import JSONParser
-from KinoApi.serializers import UserSerializer
+from KinoApi.serializers import UserSerializer, EmailSerializer
 from django.views.generic.base import TemplateView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -21,28 +21,63 @@ class UserCountView(APIView):
         return Response( content, content_type='application/json' )
 
 class UserAuthView(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):        
-        serializer = self.serializer_class( data=request.data, context={'request': request} )
-        if serializer.is_valid():
-            user = serializer.validated_data['user']
-            token, created = Token.objects.get_or_create(user=user)
+    parser_classes = (JSONParser,)
+    renderer_classes = (JSONRenderer, )
 
-            content = {
-                'token': token.key,
-                'user_id': user.pk,
-                'email': user.email
-            } #dict(d1, **d2)
-            return Response( 
-                content, 
-                content_type='application/json' 
-            )
-        else:
-            return Response( 
-                serializer._errors, 
+    def post(self, request, pk=None):
+        errors = {}
+        
+        try:
+            email = request.data['email']
+        except:
+            errors['email'] = 'is required'
+        
+        try:
+            password = request.data['password']
+        except:
+            errors['password'] = 'is required'
+
+        if len(errors.keys()) > 0:
+            return Response(
+                errors, 
                 status=status.HTTP_400_BAD_REQUEST, 
                 content_type='application/json' 
             )
 
+        try:
+            user = CustomUser.objects.get(email=email)
+        except Exception as error:
+            print(error)
+            return Response(
+                {'email': 'юзера с таким emailом не существует'}, 
+                status=status.HTTP_403_FORBIDDEN, 
+                content_type='application/json' 
+            )
+
+        try:
+            valid = user.check_password(password)
+            if not valid:
+                raise ValueError("Password Incorrect")
+        except Exception as error:
+            print(error)
+            return Response(
+                {'password': 'неверный пароль'}, 
+                status=status.HTTP_403_FORBIDDEN, 
+                content_type='application/json' 
+            )
+
+        token, created = Token.objects.get_or_create(user=user)
+        content = {
+            'token': token.key,
+            'username': user.username,
+            'user_id': user.pk,
+            'email': user.email
+        }
+        return Response(
+            content, 
+            status=status.HTTP_201_CREATED, 
+            content_type='application/json' 
+        )
 
 class UserRegistarationView(APIView):
     parser_classes = (JSONParser,)
