@@ -69,9 +69,11 @@ class UserAuthView(ObtainAuthToken):
         token, created = Token.objects.get_or_create(user=user)
         content = {
             'token': token.key,
-            'username': user.username,
-            'user_id': user.pk,
-            'email': user.email
+            'user': {
+                'username': user.username,
+                'user_id': user.pk,
+                'email': user.email
+            }
         }
         return Response(
             content, 
@@ -116,9 +118,11 @@ class UserRegistarationView(APIView):
             token, created = Token.objects.get_or_create(user=user)
             content = {
                 'token': token.key,
-                'username': user.username,
-                'user_id': user.pk,
-                'email': user.email
+                'user': {
+                    'username': user.username,
+                    'user_id': user.pk,
+                    'email': user.email
+                }
             }
             return Response(
                 content, 
