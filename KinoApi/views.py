@@ -71,7 +71,7 @@ class UserAuthView(ObtainAuthToken):
             'token': token.key,
             'user': {
                 'username': user.username,
-                'user_id': user.pk,
+                'id': user.pk,
                 'email': user.email
             }
         }
@@ -120,7 +120,7 @@ class UserRegistarationView(APIView):
                 'token': token.key,
                 'user': {
                     'username': user.username,
-                    'user_id': user.pk,
+                    'id': user.pk,
                     'email': user.email
                 }
             }
